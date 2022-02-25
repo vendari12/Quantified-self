@@ -1,0 +1,21 @@
+{% extends 'layouts/form.html' %}
+
+{% block title %}Create Category{% endblock %}
+{% block content %}
+
+<div class="main" style="background-image: url('/static/img/main-bg.svg');">
+  <form method="post" class="form">
+    <h3 class="form-heading">Create Category <a href="/" title="Back to Trackers"><i class="fa fa-home pull-right"></i></a></h3>
+  {% for field, errors in form.errors.items() %}
+  <p style="color: red; background-color: seashell;">{{','.join(errors)}} </p>
+  {% endfor %}
+    {{form.hidden_tag()}}
+    {{ form.title(class_ = 'form-control first-input', placeholder = form.title.label.text, required = true, autofocus = true) }}
+    {{ form.description(class_ = 'form-control', placeholder = form.description.label.text, required = true, autofocus = true) }}
+
+    <br>
+    
+    <input type="submit" value="Register" class="btn btn-primary btn-lg btn-block">
+</form>
+</div>
+     {% endblock %}

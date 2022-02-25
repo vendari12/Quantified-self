@@ -1,0 +1,83 @@
+{% extends "layouts/main.html" %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/templatemo-stand-blog.css">
+{% endblock %}
+
+{% block content %}
+    <div class="blog-posts grid-system">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="all-blog-posts">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="blog-post">
+                    <div class="blog-thumb">
+                      <img src="assets/images/blog-post-02.jpg" alt="">
+                    </div>
+                    <div class="down-content">
+                        
+                      <span>{{obj.category.title}}</span>
+                      <a><h4>{{obj.title}}</h4></a>
+                      <ul class="post-info">
+                        <li><a href="#">{{obj.user.username}}</a></li>
+                        <li><a href="#">{{obj.created_at}}</a></li>
+                        <li><a href="#">{{obj.timestamp}}</a></li>
+                      </ul>
+                      <p>{{obj.description}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="sidebar">
+                <div class="col-lg-12">
+                  <div class="sidebar-item recent-posts">
+                    <div class="sidebar-heading">
+                      <h2>Recent Tracker</h2>
+                    </div>
+                    <div class="content">
+                      <ul>
+                        <li><a href="post-details.html">
+                          <h5>Vestibulum id turpis porttitor sapien facilisis scelerisque</h5>
+                          <span>May 31, 2020</span>
+                        </a></li>
+                        <li><a href="post-details.html">
+                          <h5>Suspendisse et metus nec libero ultrices varius eget in risus</h5>
+                          <span>May 28, 2020</span>
+                        </a></li>
+                        <li><a href="post-details.html">
+                          <h5>Swag hella echo park leggings, shaman cornhole ethical coloring</h5>
+                          <span>May 14, 2020</span>
+                        </a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="sidebar-item categories">
+                    <div class="sidebar-heading">
+                      <h2>Categories</h2>
+                    </div>
+                    <div class="content">
+                      <ul>
+                        <li><a href="#">- Nature Lifestyle</a></li>
+                        <li><a href="#">- Awesome Layouts</a></li>
+                        <li><a href="#">- Creative Ideas</a></li>
+                        <li><a href="#">- Responsive Templates</a></li>
+                        <li><a href="#">- HTML5 / CSS3 Templates</a></li>
+                        <li><a href="#">- Creative &amp; Unique</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+        </div>
+    </div>
+
+
+{% endblock %}

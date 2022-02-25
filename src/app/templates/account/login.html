@@ -1,0 +1,19 @@
+{% extends 'layouts/form.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+  <form method="post" class="form">
+    <h3 class="form-heading">Login <a href="/" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
+    <input type="hidden" name="next" value="{{ next }}">
+    {{form.hidden_tag()}}
+    {{ form.email(class_ = 'form-control first-input', placeholder = form.email.label.text, required = true, autofocus = true) }}
+    {{ form.password(class_ = 'form-control', placeholder = form.password.label.text, required = true) }}
+<div class="form-control remember_me" style="background: none; border: none;">
+    <label>{{form.remember_me.label.text}}</label>
+    <span style="width: 10px;">{{ form.remember_me }}</span>
+    </div>
+    <p class="pull-left"><a href="/account/forgot">Forgot Password?</a></p>
+    <p class="pull-right"><a href="/account/register">Register</a></p>
+    <input type="submit" value="Submit" class="btn btn-primary btn-lg btn-block" >
+    <br>
+  </form>
+{% endblock %}
