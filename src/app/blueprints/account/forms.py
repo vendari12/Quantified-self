@@ -6,7 +6,9 @@ from flask_uploads import UploadSet, IMAGES
 from wtforms_alchemy import model_form_factory
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional
+from wtforms.validators import Optional
+from wtforms_alchemy import Unique
+
 
 images = UploadSet('images', IMAGES)
 
