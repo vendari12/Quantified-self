@@ -16,6 +16,13 @@ class TrackerCategory(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=func.now())
 
+    def get_trackers(self):
+        return self.tracker.all()
+
+    
+    def get_tracker_count(self):
+        return len(self.tracker.all())    
+
     def __repr__(self):
         return '<TrackerCategory \'%s\'>' % self.title 
 
@@ -39,13 +46,16 @@ class Tracker(db.Model):
     def archive_log(self):
         """This function sets a tracker archives a tracker based on the timestamp"""
         now = datetime.now()
-        if now - self.updated_at > self.timestamp:
+        if now - self.updated_at > datetime.timedelta(minutes=self.timestamp):
             self.active = False
             db.session.add(self)
             db.session.commit()
+            return False
+        else:
+            return True    
     @property
     def is_active(self):
-        return True if self.active == True else False
+        return self.archive_log()
 
     def __repr__(self):
         return '<Tracker \'%s\'>' % self.title     

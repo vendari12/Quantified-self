@@ -1,28 +1,61 @@
-{% extends 'layouts/form.html' %}
-{% import 'macros/check_password.html' as check %}
-
+{% extends 'layouts/base.html' %}
 {% block title %}Register{% endblock %}
 {% block content %}
 
+    <div class="content" style="margin-top: 2cm;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <!-- <div class="col-md-6 order-md-2">
+            <img src="images/undraw_file_sync_ot38.svg" alt="Image" class="img-fluid">
+          </div> -->
+          <div class="col-md-6 contents">
+            <div class="row justify-content-center">
+              <div class="col-md-12">
+                <div class="form-block">
+                    <div class="mb-4">
+                    <h3>Sign Up to <strong>{{config.APP_NAME}}</strong></h3>
+                    <p class="mb-4">Fill in your details lets help get you started.</p>
+                  </div>
+                  {% for field, errors in form.errors.items() %}
+                  <p style="color: red; background-color: seashell;">{{','.join(errors)}} </p>
+                  {% endfor %}
+                  <form action="#" method="post">
+                   
+                    {{form.hidden_tag()}}
+                    <div class="form-group first">
+                    {{ form.first_name(class_ = 'form-control first-input', placeholder = form.first_name.label.text, required = true, autofocus = true) }}
+                    </div>
+                    <div class="form-group">
+                    {{ form.last_name(class_ = 'form-control first-input', placeholder = form.last_name.label.text, required = true, autofocus = true) }}
+                    </div>
+                    <div class="form-group">
+                    {{ form.username(class_ = 'form-control', placeholder = form.username.label.text, required = true, autofocus = true) }}
+                    </div>
+                    <div class="form-group">
+                    {{ form.email(class_ = 'form-control', placeholder = form.email.label.text, required = true) }}
+                    </div>
+                    <div class="form-group">
+                    {{ form.gender(class_ = 'form-control', placeholder = form.gender.label.text, required = true) }}
+                      </div>
+                      <div class="form-group">
+                    {{ form.password(class_ = 'form-control', placeholder = form.password.label.text, required = true) }}
+                    </div>
+                    <div class="form-group last mb-4">
+                    {{ form.confirm(class_ = 'form-control last-input', placeholder = form.confirm.label.text, required = true) }}
+                    </div>
+                    <center><p>Already registered? <a href="/account/login">Login</a></p></center>
+                    <input type="submit" value="Register" class="btn btn-pill text-white btn-block btn-primary">
+  
+                        
+                  </form>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </div>
 
-  <form method="post" class="form">
-    <h3 class="form-heading">Register <a href="/" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
-  {% for field, errors in form.errors.items() %}
-  <p style="color: red; background-color: seashell;">{{','.join(errors)}} </p>
-  {% endfor %}
-    {{form.hidden_tag()}}
-    {{ form.first_name(class_ = 'form-control first-input', placeholder = form.first_name.label.text, required = true, autofocus = true) }}
-    {{ form.last_name(class_ = 'form-control first-input', placeholder = form.last_name.label.text, required = true, autofocus = true) }}
-    {{ form.username(class_ = 'form-control', placeholder = form.username.label.text, required = true, autofocus = true) }}
-    {{ form.email(class_ = 'form-control', placeholder = form.email.label.text, required = true) }}
-    {{ form.gender(class_ = 'form-control', placeholder = form.gender.label.text, required = true) }}
-
-    {{ form.password(class_ = 'form-control', placeholder = form.password.label.text, required = true) }}
-    {{ form.confirm(class_ = 'form-control last-input', placeholder = form.confirm.label.text, required = true) }}
-    <center><p>Already registered? <a href="/account/login">Login</a></p></center>
-    <input type="submit" value="Register" class="btn btn-primary btn-lg btn-block">
-    <br>
-
-
-    {{ check.password_check('password', 0) }}
      {% endblock %}

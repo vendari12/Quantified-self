@@ -1,10 +1,17 @@
-{% extends "layouts/main.html" %}
+{% extends "layouts/base.html" %}
 {% block extra_css %}
-<link rel="stylesheet" href="/static/css/templatemo-stand-blog.css">
+<link rel="stylesheet" href="/static/css/animate.min.css">
+<link rel="stylesheet" href="/static/css/owl-carousel.css">
+<link rel="stylesheet" href="/static/css/magnific-popup.css">
+<link rel="stylesheet" href="/static/css/linearicons.css">
+<link rel="stylesheet" href="/static/css/custom.css">
+
+
 {% endblock %}
 
 {% block content %}
-    <div class="blog-posts grid-system">
+
+{#    <div class="blog-posts grid-system">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
@@ -77,7 +84,211 @@
             </div>
         
         </div>
+#}
+
+
+
+<!--================ Start header Top Area =================-->
+<section class="header-top">
+  <div class="container box_1170">
+      <div class="row align-items-center justify-content-between">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+              <a href="index.html" class="logo">
+                  <img src="/static/img/logo.png" alt="">
+              </a>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 search-trigger">
+              <a href="#" class="search">
+                  <i class="lnr lnr-magnifier" id="search"></i></a>
+              </a>
+          </div>
+      </div>
+  </div>
+</section>
+<!--================ End header top Area =================-->
+
+<!-- Start header Area -->
+<header id="header">
+  <div class="container box_1170 main-menu">
+      <div class="row align-items-center justify-content-center d-flex">
+          <nav id="nav-menu-container">
+              <ul class="nav-menu">
+                {% for cat in categories %}
+                  <li class="menu-active"><a href="{{url_for('main.main_category', category_id=cat.id)}}">{{cat.title}} ({{cat.get_tracker_count()}})</a></li>
+                  {% endfor %}
+              </ul>
+          </nav>
+      </div>
+  </div>
+
+  <div class="search_input" id="search_input_box">
+      <div class="container box_1170">
+          <form class="d-flex justify-content-between">
+              <input type="text" class="form-control" id="search_input" placeholder="Search Here">
+              <button type="submit" class="btn"></button>
+              <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+          </form>
+      </div>
+  </div>
+</header>
+<!-- End header Area -->
+
+<!-- Start banner Area -->
+<section class="banner-area relative">
+  <div class="overlay overlay-bg"></div>
+  <div class="container box_1170">
+      <div class="row d-flex align-items-center justify-content-center">
+          <div class="about-content col-lg-12">
+              <h1 class="text-white">
+                  View Your Tracker 
+              </h1>
+              <p class="text-white link-nav"><a href="/">Home </a> <span class="lnr lnr-arrow-right"></span>
+                  <a href="#">Tracker</a> <span class="lnr lnr-arrow-right"></span>
+                  <a href="#"> Tracker Details</a></p>
+          </div>
+      </div>
+  </div>
+</section>
+<!-- End banner Area -->
+
+<!-- Blog Area -->
+<section class="blog_area section-gap single-post-area">
+  <div class="container box_1170">
+      <div class="row">
+          <div class="col-lg-8">
+              <div class="main_blog_details">
+                  <img class="img-fluid" src="img/blog/news-blog.jpg" alt="">
+                  <h4>{{obj.title}}</h4>
+                  <div class="user_details">
+                      <div class="float-left">
+                          <a href="#">{{obj.category.title}}</a>
+                         
+                      </div>
+                      <div class="float-right">
+                          <div class="media">
+                              <div class="media-body">
+                                  <h5>{{obj.user.username}}</h5>
+                                  <p>{{obj.created_at}}</p>
+                              </div>
+                              <div class="d-flex">
+                                  <img src="img/blog/user-img.jpg" alt="">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <a href="{{url_for('main.delete_tracker', tracker_id=obj.id, tracker_title=obj.title)}}"><button class="btn btn-danger">Delete</button></a>
+                  <a href="{{url_for('main.edit_tracker', tracker_id=obj.id, tracker_title=obj.title)}}"><button class="btn btn-warning">Edit</button></a>
+
+
+                  <p>{{obj.description}}</p>
+
+             
+          </div>
+          </div>
+          <div class="col-lg-4 sidebar">
+    <div class="single-widget protfolio-widget">
+      <img class="img-fluid" src="{{current_user.get_photo()}}" alt="">
+      <a href="#">
+        <h4>{{current_user.full_name}}</h4>
+      </a>
+      <p class="p-text">
+        {{current_user.summary_text}}.
+      </p>
+      <ul class="social-links">
+        <li><a href="#"><i class="fa fa-cogs"></i></a></li>
+      </ul>
+      <img src="img/sign.png" alt="">
     </div>
 
+    <div class="single-widget popular-posts-widget">
+      <div class="jq-tab-wrapper" id="horizontalTab">
+        <div class="jq-tab-menu">
+          <div class="jq-tab-title active" data-tab="1">Popular</div>
+          <div class="jq-tab-title" data-tab="2">Latest</div>
+        </div>
+        <div class="jq-tab-content-wrapper">
+          <div class="jq-tab-content active" data-tab="1">
+            {% for item in latest %}
+            <div class="single-popular-post d-flex flex-row">
+              <div class="popular-thumb">
+                <img class="img-fluid" src="img/posts/carousel/stories1.jpg" alt="">
+              </div>
+              <div class="popular-details">
+                <h6><a href="">{{item.title}}<br>
+                    {{item.description[:15]}}</a></h6>
+                <p>{{item.created_at}}</p>
+              </div>
+            </div>
+            {% endfor %}
+           
+          </div>
 
+          <div class="jq-tab-content active" data-tab="2">
+
+            <div class="single-popular-post d-flex flex-row">
+              <div class="popular-thumb">
+                <img class="img-fluid" src="img/posts/carousel/stories2.jpg" alt="">
+              </div>
+              <div class="popular-details">
+                <h6><a href="">2nd Gen Smoke Alarm <br>
+                    get up from sleep</a></h6>
+                <p>September 14, 2018</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="single-widget category-widget">
+      <h4 class="title">Categories</h4>
+      <ul>
+        {% for cat in categories %}
+        
+        <li>
+          <a href="{{url_for('main.main_category', category_id=cat.id)}}" class="justify-content-between align-items-center d-flex">
+            <p><img src="{{url_for('main.main_category', category_id=cat.id)}}" alt="">{{cat.title}} ({{cat.get_tracker_count()}})</p>
+          </a>
+        </li>
+  
+                  {% endfor %}
+        
+      </ul>
+    </div>
+
+    <div class="single-widget tags-widget">
+      <h4 class="title">Latest Archived</h4>
+      <ul>
+        <li><a href="#">Lifestyle</a></li>
+        <li><a href="#">Art</a></li>
+        <li><a href="#">Adventure</a></li>
+        <li><a href="#">Food</a></li>
+        <li><a href="#">Techlology</a></li>
+        <li><a href="#">Fashion</a></li>
+        <li><a href="#">Architecture</a></li>
+        <li><a href="#">Food</a></li>
+        <li><a href="#">Technology</a></li>
+      </ul>
+    </div>
+
+       </div>
+      </div>
+  </div>
+</section>
+<!-- Blog Area -->
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="/static/js/easing.min.js"></script>
+    <script src="/static/js/hoverIntent.js"></script>
+    <script src="/static/js/superfish.min.js"></script>
+    <script src="/static/js/jquery.ajaxchimp.min.js"></script>
+    <script src="/static/js/jquery.magnific-popup.min.js"></script>
+    <script src="/static/js/owl.carousel.min.js"></script>
+    <script src="/static/js/jquery.tabs.min.js"></script>
+    <script src="/static/js/jquery.nice-select.min.js"></script>
+    <script src="/static/js/waypoints.min.js"></script>
 {% endblock %}

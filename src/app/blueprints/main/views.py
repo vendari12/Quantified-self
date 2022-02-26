@@ -13,15 +13,28 @@ def index():
     active_trackers = Tracker.query.filter_by(active=True).all()
     archived_trackers = Tracker.query.filter_by(active=False).all()
     categories = TrackerCategory.query.all()
-    print(categories)
     categories_count = TrackerCategory.query.count()
     return render_template('pages/home.html', active=active_trackers, archived = archived_trackers, categories=categories, categories_count=categories_count)
+
+
+@main.route('/trackers/<int:page>', methods=['GET'])
+@main.route('/trackers/', defaults={'page': 1}, methods=['GET'])
+@login_required
+def trackers(page):    
+    trackers = Tracker.query.filter_by(user=current_user).order_by(Tracker.created_at.desc()).paginate(page, per_page=50)
+    categories = TrackerCategory.query.all()
+    categories_count = TrackerCategory.query.count()
+    return render_template('pages/trackers.html',  archived = trackers, categories=categories, categories_count=categories_count)
+
+
 
 @main.route('/tracker/<int:tracker_id>/<tracker_title>/')
 @login_required
 def view_tracker(tracker_id, tracker_title):
     obj = Tracker.query.filter_by(user=current_user).filter_by(id=tracker_id).filter_by(title=tracker_title).first_or_404()
-    return render_template('pages/tracker_detail.html', obj=obj)    
+    latest = Tracker.query.filter_by(user=current_user).order_by(Tracker.created_at.desc()).all()[:5]
+    categories = TrackerCategory.query.all()
+    return render_template('pages/tracker_detail.html', obj=obj, categories=categories, latest=latest)    
 
 @main.route('/tracker/add', methods=['GET','POST'])
 @login_required
@@ -44,7 +57,7 @@ def create_tracker():
 @main.route('/tracker/<int:tracker_id>/<tracker_title>/_edit', methods=['GET', 'POST'])
 @login_required
 def edit_tracker(tracker_id, tracker_title):
-    tracker = Tracker.query.filter_by(user=current_user).get_or_404(tracker_id)
+    tracker = Tracker.query.filter_by(user=current_user).first_or_404(tracker_id)
     form = TrackerForm(obj=tracker)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -55,20 +68,20 @@ def edit_tracker(tracker_id, tracker_title):
             db.session.add(tracker)
             db.session.commit()
             flash(f'You have successfully Edited this tracker, it will now expire in {form.timestamp.data} minutes')
-            return redirect(url_for('main.view_tacker', tracker_id=tracker.id, tracker_title=tracker.title))
-        return render_template('pages/tracker-add-edit.html', tracker=tracker, form=form)    
+            return redirect(url_for('main.view_tracker', tracker_id=tracker.id, tracker_title=tracker.title))
+    return render_template('pages/tracker-add-edit.html', tracker=tracker, form=form)    
             
 
 
-@main.route('/tracker/<int:tracker_id>/<tracker_type>/<tracker_title>/_delete')
+@main.route('/tracker/<int:tracker_id>/<tracker_title>/_delete')
 @login_required
-def delete_tracker(tracker_id, tracker_type, tracker_title):
+def delete_tracker(tracker_id,tracker_title):
     obj = Tracker.query.filter_by(user=current_user).filter_by(id=tracker_id).\
-        filter_by(tracker_type=tracker_type).filter_by(title=tracker_title).get_or_404()
+        filter_by(title=tracker_title).first_or_404()
     db.session.delete(obj)
     db.session.commit()
     flash('Tracker successfully deleted, feel free to create more', 'success')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.tracker'))
 
 
 
@@ -122,3 +135,73 @@ def tracker_category_delete(category_id):
     db.session.commit()
     flash('Successfully deleted Category.', 'success')
     return redirect(url_for('main.index'))
+
+
+
+@main.route('/category/<int:category_id>/<int:page>', methods=['GET'])
+@main.route('/category/<int:category_id>', defaults={'page': 1}, methods=['GET'])
+@login_required
+def main_category(category_id, page):
+    category = TrackerCategory.query.get(category_id)
+    posts = Tracker.query.filter(Tracker.category.has(id=category.id)).order_by(Tracker.created_at.desc()).paginate(page, per_page=40)
+    if category and posts:
+        return render_template('pages/category-detail.html',posts=posts, category=category)
+   
+
+
+@main.route('/category/<int:page>', methods=['GET'])
+@main.route('/category/', defaults={'page': 1}, methods=['GET'])
+def categories(page):
+    category = TrackerCategory.query.paginate(page, per_page=50)
+    return render_template('pages/category.html',categories=category)   
+
+"""
+@main.route('/tracker/<int:tracker_id>/comment', methods=['POST'])
+@login_required
+def add_comment(tracker_id):
+
+    post = Tracker.query.get_or_404(tracker_id)
+
+    data = request.get_json(force = True)
+    text = data['text']
+
+    if not text:
+
+        return dict(status='fail', message='text required'), 400
+
+    parent_id = data['parent_id']
+
+    if parent_id and parent_id != '0' and parent_id != 0:
+
+        comment = mainComment(
+
+            post_id=post.id,
+
+            text=text,
+
+            user_id=current_user.id,
+
+            parent_id=parent_id
+
+        )
+
+    else:
+
+        comment = mainComment(
+
+            post_id=post.id,
+
+            text=text,
+
+            user_id=current_user.id,
+
+        )
+
+    db.session.add(comment)
+
+    db.session.commit()
+
+    return dict(status='sucess', message="comment added successfuly"), 201
+"""
+
+

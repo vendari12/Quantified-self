@@ -32,7 +32,7 @@ def login():
                 flash('You are now logged in. Welcome back!', 'success')
                 return redirect(url_for('main.index'))
             else:
-                flash('Invalid username or password.', 'danger')
+                flash('Invalid email or password.', 'danger')
     return render_template('account/login.html', form=form, next=next)
 
 @account.route('/register', methods=['GET', 'POST'])
@@ -74,7 +74,138 @@ def logout():
     return redirect(url_for('public.index'))
 
 
-@account.route('/forgot')
+
+
+
+@account.route('/reset-password', methods=['GET', 'POST'])
 def forgot():
-    form = RequestResetPasswordForm()
-    return render_template('forms/forgot.html', form=form)
+    """Respond to existing user's request to reset their password."""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = RequestResetPasswordForm()()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = user.generate_password_reset_token()
+            reset_link = url_for('account.reset_password', token=token, _external=True)
+            print(reset_link)   
+        flash('A password reset link has been sent to {}.'.format(user.email), 'warning')
+        return redirect(url_for('account.login'))
+    return render_template('account/forgot.html', form=form)
+
+
+@account.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """Reset an existing user's password."""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None:
+            flash('Invalid phone number.', 'form-error')
+            return redirect(url_for('post.post_create'))
+        if user.reset_password(token, form.new_password.data):
+            flash('Your password has been updated.', 'success')
+            return redirect(url_for('account.login'))
+        else:
+            flash('The password reset link is invalid or has expired.',
+                  'danger')
+            return redirect(url_for('account.login'))
+    return render_template('account/reset_password.html', form=form)
+
+
+@account.route('/manage/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    """Change an existing user's password."""
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.new_password.data
+            db.session.add(current_user)
+            db.session.commit()
+            flash('Your password has been updated.', 'success')
+            return redirect(url_for('account.login'))
+        else:
+            flash('Original password is invalid.', 'danger')
+    return render_template('account/manage.html', form=form)
+
+
+
+@account.route('/manage/change-email', methods=['GET', 'POST'])
+@login_required
+def change_email_request():
+    """Respond to existing user's request to change their email."""
+    form = ChangeEmailForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.password.data):
+            new_email = form.email.data
+            token = current_user.generate_email_change_token(new_email)
+            change_email_link = url_for(
+                'account.change_email', token=token, _external=True)
+            data = {'change_email': change_email_link,
+                    'user': current_user._get_current_object()}
+            """get_queue().enqueue(
+                send_email,
+                recipient=new_email,
+                subject='Confirm Your New Email',
+                template='account/email/change_email',
+                # current_user is a LocalProxy, we want the underlying user
+                # object
+                body = data)"""
+            flash('A confirmation link has been sent to {}.'.format(new_email),
+                  'warning')
+            return redirect(url_for('post.post_create'))
+        else:
+            flash('Invalid email or password.', 'form-error')
+    return render_template('account/manage.html', form=form)
+
+
+@account.route('/manage/change-email/<token>', methods=['GET', 'POST'])
+@login_required
+def change_email(token):
+    """Change existing user's email with provided token."""
+    if current_user.change_email(token):
+        flash('Your email address has been updated.', 'success')
+    else:
+        flash('The confirmation link is invalid or has expired.', 'error')
+    return redirect(url_for('post.post_create'))
+
+
+
+
+
+
+@account.route('/manage/update-profile', methods=['GET', 'POST'])
+@login_required
+def change_profile_details():
+    """Respond to existing user's request to change their profile details."""
+    user_instance = current_user
+    form = EditProfileForm(obj=user_instance)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if form.validate_on_submit():
+                form.populate_obj(user_instance)
+                db.session.add(user_instance)
+                if request.files['photo']:
+                    image_filename = images.save(request.files['photo'])
+                    image_url = images.url(image_filename)
+                    picture_photo = Photo.query.filter_by(user_id=current_user.id).first()
+                    if not picture_photo:
+                        picture_photo = Photo(
+                            image_filename=image_filename,
+                            image_url=image_url,
+                            user_id=current_user.id,
+                        )
+                    else:
+                        picture_photo.image_filename = image_filename
+                        picture_photo.image_url = image_url
+                    db.session.add(picture_photo)
+                db.session.commit()
+                flash('You have successfully updated your profile',
+                      'success')
+                return redirect(url_for('account.manage'))
+            else:
+                flash('Unsuccessful.', 'warning')
+    return render_template('account/edit_profile.html', form=form)

@@ -1,12 +1,41 @@
-{% extends 'layouts/form.html' %}
+{% extends 'layouts/base.html' %}
 {% block title %}Reset Password{% endblock %}
 {% block content %}
-  <form method="post" class="form form-reset">
-    <h3 class="form-heading">Reset Password <a href="/" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
-    {{ form.email(class_ = 'form-control first-input last-input', placeholder = form.email.label.text) }}
-    <p class="pull-left"><a href="/account/login">Login</a></p>
-    <p class="pull-right"><a href="/account/register">Register</a></p>
-    <input type="submit" value="Submit" class="btn btn-lg btn-primary btn-block" disabled>
-    <br>
-  </form>
+  <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
+          <div class="content" style="margin-top: 2cm;">
+            <div class="container">
+              <div class="row justify-content-center">
+                <!-- <div class="col-md-6 order-md-2">
+                  <img src="images/undraw_file_sync_ot38.svg" alt="Image" class="img-fluid">
+                </div> -->
+                <div class="col-md-6 contents">
+                  <div class="row justify-content-center">
+                    <div class="col-md-12">
+                      <div class="form-block">
+                          <div class="mb-4">
+                          <h3>Reset Password</h3>
+                          <p class="mb-4">Recover your password using your email.</p>
+                        </div>
+                        <form method="post">
+                            {{form.hidden_tag()}}   
+                          <div class="form-group first">
+                            {{ form.email(class_='form-control first-input, last-input', placeholder=form.email.label.text, required=true, autofocus=true)}}
+        
+                          </div>
+                          
+                          <input type="submit" value="Submit" class="btn btn-pill text-white btn-block btn-primary">
+        
+                         
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        
+    </div>
 {% endblock %}

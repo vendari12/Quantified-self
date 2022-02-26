@@ -1,10 +1,14 @@
-from flask import url_for
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, EmailField, ValidationError, SelectField, BooleanField
+from wtforms import StringField, PasswordField, EmailField, ValidationError\
+    , SelectField, BooleanField, TextAreaField, FileField, IntegerField
 from wtforms.validators import DataRequired, EqualTo, Length, InputRequired, Email
 from app.models import User
+from flask_uploads import UploadSet, IMAGES
 from wtforms_alchemy import model_form_factory
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional
+
+images = UploadSet('images', IMAGES)
 
 BaseModelForm = model_form_factory(FlaskForm)
 
@@ -16,7 +20,6 @@ class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[InputRequired(), Email()])
     password = PasswordField('Password', [DataRequired()])
     remember_me = BooleanField('Keep me logged in')
-
 
 
 
@@ -42,7 +45,7 @@ class RegistrationForm(BaseModelForm):
             raise ValidationError('Email already registered.')                             
 
 
-class RequestResetPasswordForm(Form):
+class RequestResetPasswordForm(FlaskForm):
     email = EmailField(
         'Email', validators=[InputRequired(),
                              Length(1, 64),
@@ -69,7 +72,7 @@ class ResetPasswordForm(BaseModelForm):
             raise ValidationError('Unknown email address.')
 
 
-class CreatePasswordForm(Form):
+class CreatePasswordForm(FlaskForm):
     password = PasswordField(
         'Password',
         validators=[
@@ -93,3 +96,32 @@ class ChangePasswordForm(FlaskForm):
 
 
 
+
+class ChangeEmailForm(FlaskForm):
+    email = EmailField(
+        'New email', validators=[InputRequired(),
+                                 Length(1, 64),
+                                 Email()])
+    password = PasswordField('Password', validators=[InputRequired()])
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered.')
+
+
+
+
+class EditProfileForm(BaseModelForm):
+    first_name = StringField('First name', validators=[InputRequired()])
+    last_name = StringField('Last name', validators=[InputRequired()])
+    photo = FileField('Profile Image', validators=[Optional(), FileAllowed(images, 'Images only!')])
+    area_code = StringField('Phone area code only')
+    mobile_phone = IntegerField('Phone numbers only', validators=[InputRequired(), Unique(User.mobile_phone)])
+    city = StringField('City', validators=[InputRequired()])
+    state = SelectField(u'Select State in Nigeria')
+    gender = SelectField(u'Gender', choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')])
+    country = StringField('Select Country')
+      
+    zip = StringField('Zip Code', validators=[InputRequired(), Length(1, 7)])
+    summary_text = TextAreaField('Summary Text or Description')
+    

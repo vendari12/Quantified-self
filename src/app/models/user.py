@@ -70,6 +70,8 @@ class User(UserMixin, db.Model):
     summary_text = db.Column(db.Text)
     city = db.Column(db.String(64), index=True)
     state = db.Column(db.String(64), index=True)
+    photos = db.relationship('Photo', backref='user',
+                             lazy='dynamic')
     country = db.Column(db.String(64), index=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id', ondelete="CASCADE"))
@@ -173,6 +175,16 @@ class User(UserMixin, db.Model):
         db.session.commit()
         return True
 
+    def get_photo(self):
+        photos = self.photos.all()
+        if len(photos) > 0:
+            return photos[0].image_url
+        else:
+            if self.gender == 'Female':
+                return "https://1.semantic-ui.com/images/avatar/large/veronika.jpg"
+            else:
+                return "https://1.semantic-ui.com/images/avatar/large/jenny.jpg"    
+
     @staticmethod
     def generate_fake(count=100, **kwargs):
         from sqlalchemy.exc import IntegrityError
@@ -225,3 +237,17 @@ login_manager.anonymous_user = AnonymousUser
 
    
 
+
+
+
+class Photo(db.Model):
+    __tablename__ = 'photos'
+    id = db.Column(db.Integer, primary_key=True)
+    image_filename = db.Column(db.String, default=None, nullable=True)
+    image_url = db.Column(db.String, default=None, nullable=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey(User.id, ondelete="CASCADE"))
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+
+    def __repr__(self):
+        return u'<{self.__class__.__name__}: {self.id}>'.format(self=self)

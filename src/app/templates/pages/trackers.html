@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+        <!-- Page Header Start -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Trainer</h2>
+                    </div>
+                    <div class="col-12">
+                        <a href="">Home</a>
+                        <a href="">Trainer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+        
+        <!-- Team Start -->
+        <div class="team">
+            <div class="container">
+                <div class="section-header text-center wow zoomIn" data-wow-delay="0.1s">
+                    <p>Trackers</p>
+                    <h2>View your Old Trackers</h2>
+                </div>
+                <div class="row">
+                    {% for item in archived.items %}
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.0s">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <i class="fa fa-catalog" alt="Image">
+                            </div>
+                            <div class="team-text">
+                                <a href="{{url_for('main.view_tracker',tracker_id=item.id,tracker_title=item.title)}}"><h2 >{{item.title}}</h2></a>
+                                <p>{{item.category.title}}</p>
+                                <hr>
+                                <p>{{item.created_at}}</p>
+
+                                <p>{{item.description[:20]}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+
+{% endblock %}
+       

@@ -1,21 +1,56 @@
-{% extends 'layouts/form.html' %}
+{% extends 'layouts/base.html' %}
 
-{% block title %}Create Category{% endblock %}
+{% block title %}Create Tracker Categories{% endblock %}
 {% block content %}
 
 <div class="main" style="background-image: url('/static/img/main-bg.svg');">
-  <form method="post" class="form">
-    <h3 class="form-heading">Create Category <a href="/" title="Back to Trackers"><i class="fa fa-home pull-right"></i></a></h3>
-  {% for field, errors in form.errors.items() %}
-  <p style="color: red; background-color: seashell;">{{','.join(errors)}} </p>
-  {% endfor %}
-    {{form.hidden_tag()}}
-    {{ form.title(class_ = 'form-control first-input', placeholder = form.title.label.text, required = true, autofocus = true) }}
-    {{ form.description(class_ = 'form-control', placeholder = form.description.label.text, required = true, autofocus = true) }}
+<div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
+  <div class="content">
+    <div class="container">
+      <div class="row justify-content-center">
+        <!-- <div class="col-md-6 order-md-2">
+          <img src="images/undraw_file_sync_ot38.svg" alt="Image" class="img-fluid">
+        </div> -->
+        <div class="col-md-6 contents">
+          <div class="row justify-content-center">
+            <div class="col-md-12">
+              <div class="form-block">
+                  <div class="mb-4">
+                  <h3>Create A Tracker Categories</h3>
+                  <p class="mb-4">Create Categories for Users.</p>
+                </div>
+                {% for field, errors in form.errors.items() %}
+                <p style="color: red; background-color: seashell;">{{','.join(errors)}} </p>
+                {% endfor %}
+                <form method="post">
+                    {{form.hidden_tag()}}   
+                  <div class="form-group first">
+                    
+                    {{ form.title(class_ = 'form-control first-input', placeholder = form.title.label.text, required = true, autofocus = true) }}
+                  </div>  
+                  
+                    
+                  
+                    <div class="form-group">
+                    
+                    {{ form.description(class_ = 'form-control', placeholder = form.description.label.text, required = true, autofocus = true) }}
+                   </div>
+                    
+                 
 
-    <br>
-    
-    <input type="submit" value="Register" class="btn btn-primary btn-lg btn-block">
-</form>
+                  <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block">
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+</div>  
 </div>
      {% endblock %}

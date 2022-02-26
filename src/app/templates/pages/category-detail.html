@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+        <!-- Page Header Start -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Category</h2>
+                    </div>
+                    <div class="col-12">
+                        <a href="/">Home</a>
+                        <a href="#">{{category.title}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+
+        <!-- Class Start -->
+        <div class="class">
+            <div class="container">
+                <div class="section-header text-center wow zoomIn" data-wow-delay="0.1s">
+                    <p>Trackers Category</p>
+                    <h2>Activities under this category</h2>
+                </div>
+                <div class="row class-container">
+                    {% for item in posts.items %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 class-item filter-1 wow fadeInUp" data-wow-delay="0.0s">
+                        <div class="class-wrap">
+                            <div class="class-img">
+                                <i class="fa fa-briefcase" alt="Image"></i>
+                            </div>
+                            <div class="class-text">
+                                <div class="class-teacher">
+                                    
+                                    <h3>{{item.title}}</h3>
+                                    <a href="{{url_for('main.view_tracker', tracker_id=item.id, tracker_title=item.title)}}">+</a>
+                                </div>
+                                <h2>{{item.description[:40]}}</h2>
+                                <div class="class-meta">
+                                    <p><i class="far fa-calendar-alt"></i>{{item.created_at.strftime("%d-%m-%y")}}</p>
+                                    <p><i class="far fa-clock"></i>{{item.timestamp}} mins : ( {% if item.is_active %}Active {% else %} Expired {% endif %})</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Class End -->
+        
+        
+        <!-- Discount Start -->
+        <div class="discount wow zoomIn" data-wow-delay="0.1s" style="margin-bottom: 90px;">
+            <div class="container">
+                <div class="section-header text-center">
+                    <p>Awesome Discount</p>
+                    <h2>Get <span>30%</span> Discount for all Classes</h2>
+                </div>
+                <div class="container discount-text">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec pretium mi. Curabitur facilisis ornare velit non vulputate. Aliquam metus tortor, auctor id gravida condimentum, viverra quis sem. Curabitur non nisl nec nisi scelerisque maximus. 
+                    </p>
+                    <a class="btn">Join Now</a>
+                </div>
+            </div>
+        </div>
+        <!-- Discount End -->
+
+{% endblock %}
+       

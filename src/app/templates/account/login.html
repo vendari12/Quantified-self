@@ -1,19 +1,58 @@
-{% extends 'layouts/form.html' %}
+{% extends 'layouts/base.html' %}
 {% block title %}Login{% endblock %}
 {% block content %}
-  <form method="post" class="form">
-    <h3 class="form-heading">Login <a href="/" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
-    <input type="hidden" name="next" value="{{ next }}">
-    {{form.hidden_tag()}}
-    {{ form.email(class_ = 'form-control first-input', placeholder = form.email.label.text, required = true, autofocus = true) }}
-    {{ form.password(class_ = 'form-control', placeholder = form.password.label.text, required = true) }}
-<div class="form-control remember_me" style="background: none; border: none;">
-    <label>{{form.remember_me.label.text}}</label>
-    <span style="width: 10px;">{{ form.remember_me }}</span>
-    </div>
-    <p class="pull-left"><a href="/account/forgot">Forgot Password?</a></p>
-    <p class="pull-right"><a href="/account/register">Register</a></p>
-    <input type="submit" value="Submit" class="btn btn-primary btn-lg btn-block" >
-    <br>
-  </form>
+ 
+
+  <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
+          <div class="content">
+            <div class="container">
+              <div class="row justify-content-center">
+                <!-- <div class="col-md-6 order-md-2">
+                  <img src="images/undraw_file_sync_ot38.svg" alt="Image" class="img-fluid">
+                </div> -->
+                <div class="col-md-6 contents">
+                  <div class="row justify-content-center">
+                    <div class="col-md-12">
+                      <div class="form-block">
+                          <div class="mb-4">
+                          <h3>Sign In to <strong>{{config.APP_NAME}}</strong></h3>
+                          <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+                        </div>
+                        <form method="post">
+                            {{form.hidden_tag()}}   
+                            <input type="hidden" name="next" value="{{ next }}">
+                          <div class="form-group first">
+                            {{ form.email(class_='form-control first-input', placeholder=form.email.label.text, required=true, autofocus=true)}}
+        
+                          </div>
+                          <div class="form-group last mb-4">
+                            {{ form.password(class_='form-control', placeholder=form.password.label.text, required=true)}}
+                            
+                          </div>
+                          
+                          <div class="d-flex mb-5 align-items-center">
+                    
+                            <label class="control control--checkbox mb-0"><span class="caption">{{form.remember_me.label.text}}</span>
+                                {{ form.remember_me }}
+                              <div class="control__indicator"></div>
+                            </label>
+                            <span class="ml-auto"><a href="{{url_for('account.forgot')}}" class="forgot-pass">Forgot Password</a></span> 
+                          </div>
+        
+                          <input type="submit" value="Log In" class="btn btn-pill text-white btn-block btn-primary">
+        
+                         <a href="{{url_for('account.register')}}"><span class="d-block text-center my-4 text-muted">or <button type="button" class="btn btn-secondary">SignUp</button></span></a>
+                          
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        
+    </div>  
 {% endblock %}
